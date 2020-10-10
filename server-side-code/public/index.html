@@ -49,14 +49,15 @@
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <input id="spassword" type="password" class="validate">
-            <label for="password">Password</label>
+            <input id="semail" type="email" class="validate">
+            <label for="semail">Email</label>
           </div>
         </div>
+
         <div class="row">
           <div class="input-field col s12">
-            <input id="semail" type="email" class="validate">
-            <label for="email">Email</label>
+            <input id="spassword" type="password" class="validate">
+            <label for="spassword">Password</label>
           </div>
         </div>
         <button class="btn green" type="btn green submit">Submit</button>
@@ -113,9 +114,10 @@
           const laname = document.getElementById("last_name").value
           const email = document.getElementById("semail").value
           const pass = document.getElementById("spassword").value
-          firebase.auth().createUserWithEmailAndPassword(email, password)
+          firebase.auth().createUserWithEmailAndPassword(email, pass)
           .then(ob=>{
             console.log(ob)
+            //Make a call to the server so as to add the user to the database along with name and email ID
           })
           .catch(function(error) {
           var errorCode = error.code;
@@ -130,6 +132,12 @@
           const email = document.getElementById("email").value
           const pass = document.getElementById("password").value
           console.log(email,pass)
+          firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // ...
+          });
 
         }
 
