@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Attendance Tracker</title>
+  
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/7.23.0/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/7.23.0/firebase-auth.js"></script>
+    <script defer src="/__/firebase/7.23.0/firebase-database.js"></script>
+    <script defer src="/__/firebase/7.23.0/firebase-functions.js"></script>
+    <script defer src="/__/firebase/7.23.0/firebase-firestore.js"></script>
+
+    <script defer src="/__/firebase/7.23.0/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/7.23.0/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <style media="screen">
+    </style>
+        <script defer src="js/face-api.min.js"></script>
+        <script defer src="js/script.js"></script>
+    
+  </head>
+  <body>
+
+    <nav style="position:fixed;">
+      <div class="nav-wrapper blue">
+        <a href="#" class="brand-logo">Online Attendance Tracker</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li id="login"class="out"><a href="sass.html">Log in</a></li>
+          <li id="sign"class="out"><a href="#">Sign Up</a></li>
+          <li id="logout"class="in"><a href="#">Log Out</a></li>
+          <li class="in"><a href="session.html">Create Attendance Session</a></li>
+
+        </ul>
+      </div>
+    </nav>
+    <br>
+    <br><br>
+    <div style="margin:2%"class="in row ">
+      <video id="video" width="200" height="200" autoplay muted></video>
+        <br>
+        <div id="join">
+          <label for="inp1">Enter the key Below</label>
+          <input id="inp1" type="text">
+          <button id="b1"class="btn">Click Here To Join</button> 
+ 
+        </div>
+        <div id="box1"></div>
+
+        <br>
+        <div id="status" style="color:red"id="key">
+        </div>
+        <div style="color:red"id="key">
+          <p>Also note that trying to cover or hide face is equivalent to Absence</p>
+
+        <p>Click on the link below to Know the kind of tracking we do in real time!</p>
+        <a href="face.html">Live face tacker</a>
+
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // // The Firebase SDK is initialized and available here!
+        //
+        // firebase.auth().onAuthStateChanged(user => { });
+        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+        // firebase.messaging().requestPermission().then(() => { });
+        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+        //
+        const auth = document.querySelectorAll(".in")
+        const notaut = document.querySelectorAll(".out")
+        const logout = document.getElementById("logout")
+        const btn = document.getElementById("b1")
+        const inp = document.getElementById("inp1")
+        const join = document.getElementById("box1")
+        btn.onclick = ()=>{
+          const key = inp.value
+          if(inp!=null || inp!=""){
+            join.innerHTML = `
+            <p>Joined the session<p>
+              <p id="sid">${key}</p>`
+          }
+        }
+        logout.onclick = (e)=>{
+          e.preventDefault()
+          firebase.auth().signOut().then(function() {
+              // Sign-out successful.
+            }).catch(function(error) {
+              // An error happened.
+            });
+        }
+        
+        
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            // User is signed in.
+          var displayName = user.displayName;
+          var email = user.email;
+          var emailVerified = user.emailVerified;
+          var photoURL = user.photoURL;
+          var isAnonymous = user.isAnonymous;
+          var uid = user.uid;
+          var providerData = user.providerData;
+          auth.forEach((i)=>{
+              i.classList.remove("hide")
+            })
+            notaut.forEach((i)=>{
+              i.classList.add("hide")
+          })
+          } else {
+            console.log("Signed Out user")
+            auth.forEach((i)=>{
+              i.classList.add("hide")
+            })
+            notaut.forEach((i)=>{
+              i.classList.remove("hide")
+            })
+
+          }
+        });
+
+      });
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script src="js/app.js"></script> 
+  </body>
+</html>
