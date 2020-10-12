@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+    <title>Attendance Tracker</title>
 
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/7.23.0/firebase-app.js"></script>
@@ -23,12 +23,14 @@
 
     <nav style="position:fixed;">
       <div class="nav-wrapper blue">
-        <a href="#" class="brand-logo">Attendance Management System</a>
+        <a href="#" class="brand-logo">Online Attendance Tracker</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li id="login"class="out"><a href="sass.html">Log in</a></li>
+          <li id="login"class="out"><a href="#">Log in</a></li>
           <li id="sign"class="out"><a href="#">Sign Up</a></li>
-          <li class="in"><a href="#">Log Out</a></li>
-          <li class="in"><a href="collapsible.html">Create Attendance Session</a></li>
+          <li id="logout"class="in"><a href="#">Log Out</a></li>
+          <li class="in"><a href="session.html">Create Attendance Session</a></li>
+          <li class="in"><a href="stud.html">Join Attendance Session</a></li>
+
         </ul>
       </div>
     </nav>
@@ -77,12 +79,17 @@
             <label for="password">Password</label>
           </div>
         </div>
-        
         <button class="btn green"type="submit">Submit</button>
       </form>
 
     </div>
-  
+    <div style="align-items:center; margin-left: 20%;"class="in">
+      <img src="main.jpg" alt="Welcome Image"/>
+      <h2 style="color: #6b0db8;">Welcome on Board</h2>
+      <h2 style="color: #6b0db8;">You are good to go!</h2>
+
+    </div>
+
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         // // The Firebase SDK is initialized and available here!
@@ -96,8 +103,18 @@
         const notaut = document.querySelectorAll(".out")
         const login = document.getElementById("login")
         const signup = document.getElementById("sign")
+        const logout = document.getElementById("logout")
+
         const lform = document.getElementById("loginform")
         const sform = document.getElementById("signupform")
+        logout.onclick = (e)=>{
+          e.preventDefault()
+          firebase.auth().signOut().then(function() {
+              // Sign-out successful.
+            }).catch(function(error) {
+              // An error happened.
+            });
+        }
         login.onclick = (e)=>{
           e.preventDefault()
           lform.classList.remove("hide")
@@ -116,7 +133,13 @@
           const pass = document.getElementById("spassword").value
           firebase.auth().createUserWithEmailAndPassword(email, pass)
           .then(ob=>{
-            console.log(ob)
+            const val = ob;
+            console.log(val.uid)
+            const uid = ob.user.uid;
+            const setName = firebase.functions.httpsCallable("setName")
+            setName({name:fname+" "+laname}).then(result=>{
+              console.log(result.data)
+            })
             //Make a call to the server so as to add the user to the database along with name and email ID
           })
           .catch(function(error) {
@@ -124,15 +147,19 @@
           var errorMessage = error.message;
         // ...
         });
-
-          
         }
         lform.onsubmit = (e)=>{
           e.preventDefault()          
           const email = document.getElementById("email").value
           const pass = document.getElementById("password").value
           console.log(email,pass)
-          firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error) {
+          firebase.auth().signInWithEmailAndPassword(email, pass)
+          .then(ob=>{
+            const val2 = ob;
+            console.log("Hello")
+            console.log(ob.user.uid)
+          })
+          .catch(function(error) {
             // Handle Errors here.
             var errorCode = error.code;
             var errorMessage = error.message;
@@ -171,5 +198,8 @@
 
       });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script src="js/app.js"></script> 
   </body>
 </html>

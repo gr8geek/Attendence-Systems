@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Attendance Management</title>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/7.23.0/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/7.23.0/firebase-auth.js"></script>
+    <script defer src="/__/firebase/7.23.0/firebase-database.js"></script>
+    <script defer src="/__/firebase/7.23.0/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/7.23.0/firebase-firestore.js"></script>
+
+    <script defer src="/__/firebase/7.23.0/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <style media="screen">
+    </style>
+  </head>
+  <body>
+
+    <nav style="position:fixed;">
+      <div class="nav-wrapper blue">
+        <a href="#" class="brand-logo">Online Attendance Tracker</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li id="login"class="out"><a href="sass.html">Log in</a></li>
+          <li id="sign"class="out"><a href="#">Sign Up</a></li>
+          <li id="logout"class="in"><a href="#">Log Out</a></li>
+          <li class="in"><a href="stud.html">Join Attendance Session</a></li>
+
+        </ul>
+      </div>
+    </nav>
+    <br>
+    <br><br>
+    <div style="margin:2%"class="in row ">
+        <br>
+        <br>
+
+        <div id="bdiv">
+          <p>This will generate the attendance ID</p>
+          <button id="b1"class="btn">Click Here To Generate</button>
+  
+        </div>
+        <br>
+        <p>Copy the Key Generated and share it among your students and employee so that the could join the session</p>
+        <br>
+        <div style="color:red"id="key"></div>
+        <button id="vt" class="btn" onclick ="">View Tracking</button>
+
+        <div id="at">
+        </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // // The Firebase SDK is initialized and available here!
+        //
+        // firebase.auth().onAuthStateChanged(user => { });
+        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+        // firebase.messaging().requestPermission().then(() => { });
+        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+        //
+        var db = firebase.firestore();
+        const auth = document.querySelectorAll(".in")
+        const notaut = document.querySelectorAll(".out")
+        const logout = document.getElementById("logout")
+        const btn = document.getElementById("b1")
+        const vt = document.getElementById("vt")
+        const at = document.getElementById("at")
+        var num = ""
+        vt.onclick = ()=>{
+            var list = "";
+            console.log(num)
+            db.collection(num).get().then((querySnapshot) => {
+              console.log("Query Snapshots")
+              console.log(querySnapshot)
+            }).catch(er=>console.log(er));
+            
+
+
+        }
+        function rnd256() {
+            const bytes = new Uint8Array(32);
+            
+            window.crypto.getRandomValues(bytes);
+            
+            // convert byte array to hexademical representation
+            const bytesHex = bytes.reduce((o, v) => o + ('00' + v.toString(16)).slice(-2), '');
+            
+            // convert hexademical value to a decimal string
+            //return BigInt('0x' + bytesHex).toString(10);
+            return bytesHex;
+        }
+        function getAt(x){
+            console.log(x)
+        }
+
+        btn.onclick = ()=>{
+           num = rnd256()
+            document.getElementById("key").innerHTML = num
+            document.getElementById("bdiv").classList.add("hide")
+        }
+        logout.onclick = (e)=>{
+          e.preventDefault()
+          firebase.auth().signOut().then(function() {
+              // Sign-out successful.
+            }).catch(function(error) {
+              // An error happened.
+            });
+        }
+        
+
+
+        
+
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            // User is signed in.
+          var displayName = user.displayName;
+          var email = user.email;
+          var emailVerified = user.emailVerified;
+          var photoURL = user.photoURL;
+          var isAnonymous = user.isAnonymous;
+          var uid = user.uid;
+          var providerData = user.providerData;
+          auth.forEach((i)=>{
+              i.classList.remove("hide")
+            })
+            notaut.forEach((i)=>{
+              i.classList.add("hide")
+          })
+          } else {
+            console.log("Signed Out user")
+            auth.forEach((i)=>{
+              i.classList.add("hide")
+            })
+            notaut.forEach((i)=>{
+              i.classList.remove("hide")
+            })
+
+          }
+        });
+
+      });
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script src="js/app.js"></script> 
+    <script defer>
+  // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    </script>
+  </body>
+</html>
